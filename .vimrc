@@ -13,7 +13,7 @@
     au GuiEnter * set t_vb=
 
     " 使用mswin.vim一样的快捷键
-    source D:/ProgramFiles/Vim/vim82/mswin.vim
+    source $VIMRUNTIME mswin.vim
     behave mswin
 
     " Ctrl-Z 撤销
@@ -67,6 +67,15 @@
 
      "设置文件编码    
     set encoding=utf-8
+    " set fileencoding=utf-8,chinese,latin-1,gbk,gb18030,gk2312
+    if has("win32")
+        set fileencoding=chinese
+    else
+        set fileencoding=utf-8
+    endif
+    source $VIMRUNTIME/menu.vim
+    source $VIMRUNTIME/delmenu.vim
+    language messages zh_CN.utf-8
 
    "出现乱码的解决方法
     let &t_TI = ""
@@ -125,24 +134,26 @@
    " ************** 插件管理与设置 ************ "
     " 配置vim-plug
     call plug#begin('~/.vim/plugged')
-        Plug 'https://github.com.cnpmjs.org/vim-scripts/Solarized.git' " 主题方案
-        Plug 'https://github.com.cnpmjs.org/preservim/nerdtree'    " 文件树
-        Plug 'https://github.com.cnpmjs.org/Lokaltog/vim-powerline' "status 美化
-        Plug 'https://github.com.cnpmjs.org/octol/vim-cpp-enhanced-highlight' "对c++语法高亮增强
-        Plug 'https://github.com.cnpmjs.org/Valloric/YouCompleteMe' "自动补全
-        Plug 'https://github.com.cnpmj.org/davidhalter/jedi-vim'   " python自动补全
-        Plug 'https://github.com.cnpmjs.org/vim-scripts/indentpython.vim.git'
-        Plug 'https://github.com.cnpmjs.org/tomasr/molokai'       " molokai主题方案
-        Plug 'https://github.com.cnpmjs.org/nathanaelkane/vim-indent-guides.git' "缩进对齐显示
-        Plug 'https://github.com.cnpmjs.org/Raimondi/delimitMate'    " 括号自动补全  
-        Plug 'https://github.com.cnpmjs.org/hdima/python-syntax'     " python语法高亮
-        Plug 'https://github.com.cnpmjs.org/Yggdroot/indentLine'     " 显示缩进指示线
-        Plug 'https://github.com.cnpmjs.org/majutsushi/tagbar'       " tagbar类型分类
-        Plug 'https://github.com.cnpmjs.org/chun-yang/auto-pairs'    " 自动括号匹配 
-        Plug 'https://github.com.cnpmjs.org/preservim/nerdcommenter'  " 多行注释
-        " Plug 'https://github.com.cnpmjs.org/luochen1990/rainbow'    " 括号颜色不同
-        Plug 'https://github.com.cnpmjs.org/Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' } " 文件搜索  
-
+        Plug 'altercation/vim-colors-solarized'  " 主题方案
+        Plug 'preservim/nerdtree'    " 文件树
+        Plug 'Lokaltog/vim-powerline' "status 美化
+        Plug 'octol/vim-cpp-enhanced-highlight' "对c++语法高亮增强
+        Plug 'Valloric/YouCompleteMe' "自动补全
+        Plug 'dense-analysis/ale'          "语法检查
+        " Plug 'davidhalter/jedi-vim'   " python自动补全
+        Plug 'tomasr/molokai'       " molokai主题方案
+        Plug 'valloric/vim-indent-guides' " 缩进对齐显示
+        Plug 'Raimondi/delimitMate'    " 括号自动补全  
+        Plug 'hdima/python-syntax'     " python语法高亮
+        Plug 'yggdroot/indentline'     " 显示缩进指示线
+        Plug 'majutsushi/tagbar'       " tagbar类型分类
+        Plug 'chun-yang/auto-pairs'    " 自动括号匹配 
+        Plug 'preservim/nerdcommenter'  " 多行注释
+        Plug 'https://github.com.cnpmjs.org/luochen1990/rainbow'    " 括号颜色不同
+        Plug 'skywind3000/vim-keysound'  " 发出打字机的音效
+        Plug 'mattn/emmet-vim'          " html补全
+        " Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' } " 文件搜索  
+        Plug 'tpope/vim-surround'       " 修改括号
     call plug#end()
 
     " Powerline 设置
@@ -185,6 +196,7 @@
 
     let g:ycm_error_symbol=">>"
     let g:ycm_warning_symbol =">*"
+    let g:ycm_show_diagnostics_ui = 0    " 关闭语法检查
     let g:ycm_complete_in_comments=1
     let g:ycm_show_diagnostivs_ui = 1  " 开启实时错误或者warning的检测
     let g:ycm_complete_in_strings = 1   "在字符串输入中也能补全
@@ -204,18 +216,67 @@
     let g:ycm_collect_identifiers_from_comments_and_strings = 1
     " " 语法关键字补全
     let g:ycm_seed_identifiers_with_syntax=1
-    let g:ycm_global_ycm_extra_conf = 'C:\Users\lizhh\.vim\plugged\YouCompleteMe\third_party\ycmd\.ycm_extra_conf.py' 
+
+    let g:ycm_python_interpreter_path ='D:\ProgramFiles\Python\python.exe'
+    let g:ycm_pathon_sys_path = [
+        \ 'D:\ProgramFiles\Python\Lib\site-packages',
+        \ 'D:\ProgramFiles\Python',
+        \ 'D:\ProgramFiles\Python\DLLs',
+        \ 'D:\ProgramFiles\Python\Lib',
+        \ 'D:\ProgramFiles\Python\Scripts'
+        \]
+    let g:ycm_extra_conf_vim_data = [
+        \ 'g:ycm_python_interpreter_path',
+        \ 'g:ycm_pathon_sys_path'
+        \]
+    let g:ycm_global_ycm_extra_conf = '~\.vim\plugged\YouCompleteMe\third_party\ycmd\.ycm_extra_conf.py' 
     " nnoremap <leader>] :YcmCompleter GoToDefinitionElseDeclaration<CR>
-    nnoremap <C-[> <C-o>
+    "let g:ycm_key_list_select_completion = ['<TAB>']
+    "let g:ycm_key_list_previous_completion = ['<S-TAB>']
+    let g:ycm_key_list_stop_completion = ['<UP>', '<DOWN>']
+
     "python语法高亮
     let python_highlight_all = 1
 
+    " ale语法检查配置
+    " 始终开启标志列
+    let g:ale_sig_column_always=0
+    let g:ale_set_highlights = 0
+
+    " 错误和警告符号
+    let g:ale_sign_error = '>>'
+    let g:ale_sign_warning = '~'
+
+    " vim自带状态栏中整合ale
+    let g:ale_statusline_format = ['XXH', '%d', 'W %d', 'OK']
+
+    " 显示linter名称，出错或警告等相关信息
+    let g:ale_echo_msg_error_str = ">>"
+    let g:ale_echo_msg_warning_str = "~"
+    let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+    
+    " 只有保存时才进行语法检测
+    let g:ale_lint_on_text_changed = "never"
+    let g:ale_lint_on_insert_leave = 0
+    let g:ale_lint_on_enter = 1
+
+    nmap <Leader>en <Plug>(ale_next)        " 前往下一个错误
+    nmap <Leader>ep <Plug>(ale_previous)    " 前往上一个错误
+    nnoremap <Leader>ts :ALEToggle<CR>      " 开启/关闭语法检查
+    nnoremap <leader>d :ALEDetail<CR>       " 查看错误或警告的详细信息
+    let g:ale_linters = {
+    \   'c++': ['clang'],
+    \   'c': ['clang'],
+    \   'python': ['pylint'],
+    \}
+    " 如果是.txt文本，禁止ale插件检查，不然很卡
+    " au BufNewFile,BufRead *.txt let g:ale_enabled=0
     "括号匹配设置
     " for python docstring ",优化输入
     au FileType python let b:delimitMate_nesting_quotes = ['"']
     
     "批量注释设置
-    "<leader>cc，注释当前选中文本，如果选中的是整行则在每行首添加 //，如果选中一行的部分内容则在选中部分前后添加分别 /、/；
+    " <leader>cc，注释当前选中文本，如果选中的是整行则在每行首添加 //，如果选中一行的部分内容则在选中部分前后添加分别 /、/；
     "<leader>cu，取消选中文本块的注释。
     "<leader>c<space>, 只能判断，取消选中还是添加注释
 
@@ -229,15 +290,16 @@
             exec "!g++ %<.cpp -Wall -g -o %<.exe"
         endif
     endfunc
-
-
-   "定义执行java, python, c, c++
+    
+   "定义执行python, c, c++, javascript
     func RunCode()
         exec "w"
         if &filetype == "cpp" || &filetype == "c"
             exec "!%<.exe"
         elseif &filetype == 'python'
             exec "!python %<.py"
+        elseif &filetype == 'javascript'
+            exec "!node %<.js"
         endif
     endfunc
 
@@ -289,7 +351,7 @@
     "<F3>作为toggle
     nmap <F4> :TagbarToggle<CR>
     " 打开vim时自动打开
-    autocmd VimEnter *.cpp,*.h,*.c,*.py nested :TagbarOpen
+    " autocmd VimEnter *.cpp,*.h,*.c,*.py nested :TagbarOpen
     " wincmd l
     "如果不加这句，打开vim的时候当前光标会在Nerdtree区域
     " autocmd VimEnter * wincmd l
@@ -311,7 +373,8 @@
     nnoremap <leader>t :rightbelow ter ++rows=5<CR>
     " auto VimEnter *.cpp,*.h,*.c,*.py exec 'rightbelow ter ++rows=5'
 
-    " let g:rainbow_active = 1  
+    " 括号颜色不同
+    let g:rainbow_active = 1  
 
 
     func SetCPPTitle()
@@ -338,6 +401,7 @@
             exec ":$"
         endif
     endfunc
+    
 
     " au BufNewFile *.cpp,*.c,*.java,*.py nested exec ":call SetTitle()"
     nmap<leader>st :call SetTitle()<CR>
@@ -346,3 +410,18 @@
     
     " 设置Leaderf，文件搜索
     nnoremap <leader>f :LeaderfFile<CR> 
+
+    " 配置emmet-vim
+    " let g:user_emmet_mode='n'    "only enable normal mode functions.
+    let g:user_emmet_mode='inv'  "enable all functions, which is equal to
+    " let g:user_emmet_mode='a'    "enable all function in all mode.
+    let g:user_emmet_install_global = 0
+    autocmd FileType html,css EmmetInstall
+    let g:user_emmet_leader_key='<C-y>'
+
+    " 配置vim-keysound，让vim发出打字机的音效
+    let g:keysound_enable=1
+    let g:keysound_theme='typewriter'
+    let g:keysound_py_version = 3   " python版本
+    let g:keysound_volume = 1000     " 音量
+   
